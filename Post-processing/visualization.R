@@ -13,17 +13,14 @@ structuredTables <- lapply(temp, function(x){
   #Filter southern wall
   DF <- dplyr::filter(DF, row==21 & (col >= 11 & col <=20 ))
   #Rotate tables counter-clockwise: this way irradiance values increase vertically (bottom to top)
-  #Source: https://stackoverflow.com/questions/16496210/rotate-a-matrix-in-r
   foo <- apply(t(DF),2,rev)
   mymatrix <- foo[1:10,]
   #Create tifs
-  #Source: https://gis.stackexchange.com/questions/60387/create-raster-file-in-r-from-matrix-and-latlons
   myraster <- raster(mymatrix, xmn=0, xmx=10, ymn=0, ymx=10)
   return(myraster)
   })
 
 #Write rasters with automatic naming
-#Source: https://gis.stackexchange.com/questions/130707/how-to-write-every-raster-from-a-list-of-rasters
 rasterNames <- setNames(structuredTables, c(
   'B09h','B10h','B11h','B12h','B13h','B14h','B15h','B16h','B17h','B18h','B19h',
   'P09h','P10h','P11h','P12h','P13h','P14h','P15h','P16h','P17h','P18h','P19h',
@@ -34,7 +31,7 @@ mapply(writeRaster, rasterNames, names(rasterNames), 'GTiff', overwrite = TRUE)
 
 
 #Plot raster time series
-#Source: https://www.neonscience.org/dc-raster-time-series-r
+
 #Stack tifs
 myraster_all_files <- list.files(full.names = TRUE, pattern = ".tif$")
 myraster_all_files
