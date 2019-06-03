@@ -58,9 +58,9 @@ def SEBE_2015a_calc(a, scale, slope, aspect, voxelheight, sizey, sizex, vegdem, 
     else:
         vegdata = 0
 
-	################################################################
-	### Balazs Dienes edit: Wall matrices are appended to a list:###
-	################################################################
+    #################################################################
+    ### Balazs Dienes edit: wall matrices are appended to a list: ###
+    #################################################################
     wallmatrixlist = []
     index = 0
 
@@ -136,10 +136,10 @@ def SEBE_2015a_calc(a, scale, slope, aspect, voxelheight, sizey, sizex, vegdem, 
                 if wallsh[wallrow[p], wallcol[p]] > 0:    # sections in building shade
                     wallmatrix[p, 0:int(wallsh[wallrow[p], wallcol[p]] / voxelheight)] = Rw[wallrow[p], wallcol[p]]
 
-			################################################################################
-         		### Balazs Dienes edit: append the current wallmatrix to the list of matrices###
-			### and return the list of matrices to Main				     ###
-			################################################################################
+            #################################################################################
+            ### Balazs Dienes edit: append the current wallmatrix to the list of matrices ###
+            ### and return the list of matrices to Main					  ###
+            #################################################################################
             wallmatrixlist.append(wallmatrix)
             index = index + 1
     return wallmatrixlist, wallrow, wallcol
