@@ -1,15 +1,14 @@
 # Author: Balazs Dienes
 # Contact: dienes.balazs88@gmail.com
 
-
-# Considering the location of tree canopies for transmissivity value calculation
+# Considering the location of tree canopies for transmissivity value calculation.
 
 #Import libraries
 from osgeo import gdal
 import numpy as np
 
 #Read wall raster as NumPy array
-filepath = r"mainfolder/transmissivity_weighting_test/aspect.tif"
+filepath = r" ... .tif"
 buildingRaster = gdal.Open(filepath)
 buildingArray = np.array(buildingRaster.GetRasterBand(1).ReadAsArray())
 
@@ -24,7 +23,7 @@ for i in range(len(wallArray)):
     print wallArray[i]
 
 #Read vegetation raster as NumPy array
-filepathVeg = r"mainfolder/transmissivity_weighting_test/tree_genus_test.tif"
+filepathVeg = r" ... .tif"
 vegetationRaster = gdal.Open(filepathVeg)
 vegetationArray = np.array(vegetationRaster.GetRasterBand(1).ReadAsArray())
 
