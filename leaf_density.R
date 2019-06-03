@@ -2,7 +2,7 @@
 #Contact: dienes.balazs88@gmail.com
 
 #This code defines the transmissivity of solar radiation through the crown of urban trees.
-#The calculation is based on a linear function, calculating values between known dates of entering leaf phenological phases.
+#The calculation is based on a linear model, calculating values between known dates of entering leaf phenological phases.
 
 #Please note:
 #The applied leaf phenology table is based on:
