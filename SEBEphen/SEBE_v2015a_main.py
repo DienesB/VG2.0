@@ -14,11 +14,14 @@ from SEBEfiles.sunmapcreator_2015a import sunmapcreator_2015a
 import matplotlib.pylab as plt
 from Utilities.misc import saveraster
 
-#Import transmissivity calculation:
+#############################################################
+###Balazs Dienes edit: import transmissivity calculation: ###
+#############################################################
 import Stratified_irradiance as strata
 import Vegtype_counter as vegcounter
 import Veg_objects as vegobjects
 import inputCDSM_creator as cdsmcreator
+### end of editing ###
 
 # Input settings
 mainfolder = ".../"
@@ -87,8 +90,12 @@ slope, aspect = get_ders(dsm, scale)
 # Processing of metdata
 metin = np.loadtxt(metfilepath, skiprows=1, delimiter=' ')
 
+#########################################################################
+### Balazs Dienes edit: input meteorological data is run line-by-line ###
+#########################################################################
 for line in metin:
     met = np.zeros((1, 24)) + line
+### end of editing ###
 
     location = {'longitude': lon, 'latitude': lat, 'altitude': alt}
     YYYY, altitude, azimuth, zen, jday, leafon, dectime, altmax = metload.Solweig_2015a_metdata_noload(met, location, UTC)
@@ -97,7 +104,9 @@ for line in metin:
     print 'YYYY, altitude, azimuth, zen, jday, leafon, dectime, altmax', YYYY, altitude, azimuth, zen, jday, leafon, dectime, altmax
     #print 'radmatI, radmatD, radmatR', radmatI, radmatD, radmatR
 
-    # Create objects for existing vegtypes:
+    #########################################################################
+    ### Balazs Dienes edit: create objects for existing vegetation types: ###
+    #########################################################################
     plant1 = vegobjects.vegobjects()
     plant2 = vegobjects.vegobjects()
     plant3 = vegobjects.vegobjects()
@@ -107,14 +116,17 @@ for line in metin:
     plant7 = vegobjects.vegobjects()
     plant8 = vegobjects.vegobjects()
     noplantwallmatrix = 0
+    ### end of editing ###
 
+    #############################################################
+    ### Balazs Dienes edit: read all unique vegetation types  ###
+    ### and calculate transmissivity for each of them:        ###
+    #############################################################
     if usevegdem == 1:
-
-        # Read all unique vegtypes:
         uniquevegtype = vegcounter.vegcounter()
         print 'unique vegtypes in main: ', uniquevegtype
 
-        # ACER:
+        # B.D. edit: ACER:
         if np.any(uniquevegtype == 1):
             plant1.name = "Acer"
             # Create CDSM for Acer:
@@ -132,7 +144,7 @@ for line in metin:
             wallcol = plant1.wallmatrix[2]
             plant1.wallmatrix = plant1.wallmatrix[0]
 
-        # BETULA:
+        # B.D. edit: BETULA:
         if np.any(uniquevegtype == 2):
             plant2.name = "Betula"
             # Create CDSM for Betula:
@@ -150,7 +162,7 @@ for line in metin:
             wallcol = plant2.wallmatrix[2]
             plant2.wallmatrix = plant2.wallmatrix[0]
 
-        # FRAXINUS:
+        # B.D. edit: FRAXINUS:
         if np.any(uniquevegtype == 3):
             plant3.name = "Fraxinus"
             # Create CDSM for Fraxinus:
@@ -168,7 +180,7 @@ for line in metin:
             wallcol = plant3.wallmatrix[2]
             plant3.wallmatrix = plant3.wallmatrix[0]
 
-        # PLATANUS:
+        # B.D. edit: PLATANUS:
         if np.any(uniquevegtype == 4):
             plant4.name = "Platanus"
             # Create CDSM for Platanus:
@@ -186,7 +198,7 @@ for line in metin:
             wallcol = plant4.wallmatrix[2]
             plant4.wallmatrix = plant4.wallmatrix[0]
 
-        # QUERCUS:
+        # B.D. edit: QUERCUS:
         if np.any(uniquevegtype == 5):
             plant5.name = "Quercus"
             # Create CDSM for Quercus:
@@ -204,7 +216,7 @@ for line in metin:
             wallcol = plant5.wallmatrix[2]
             plant5.wallmatrix = plant5.wallmatrix[0]
 
-        # TILIA:
+        # B.D. edit: TILIA:
         if np.any(uniquevegtype == 6):
             plant6.name = "Tilia"
             # Create CDSM for Tilia:
@@ -222,7 +234,7 @@ for line in metin:
             wallcol = plant6.wallmatrix[2]
             plant6.wallmatrix = plant6.wallmatrix[0]
 
-        # AESCULUS:
+        # B.D. edit: AESCULUS:
         if np.any(uniquevegtype == 7):
             plant7.name = "Aesculus"
             # Create CDSM for Aesculus:
@@ -240,7 +252,7 @@ for line in metin:
             wallcol = plant7.wallmatrix[2]
             plant7.wallmatrix = plant7.wallmatrix[0]
 
-        # PINUS:
+        # B.D. edit: PINUS:
         if np.any(uniquevegtype == 8):
             plant8.name = "Pinus"
             # Create CDSM for Pinus:
@@ -258,7 +270,8 @@ for line in metin:
             wallrow = plant8.wallmatrix[1]
             wallcol = plant8.wallmatrix[2]
             plant8.wallmatrix = plant8.wallmatrix[0]
-
+    ### end of editing ###
+            
     else:
         print 'No vegetation raster applied in this run'
         vegdsm = np.zeros([rows, cols])
@@ -270,10 +283,10 @@ for line in metin:
         wallcol = noplantwallmatrix[2]
         noplantwallmatrix = noplantwallmatrix[0]
 
-    print '\nMain running...'
-    print 'Length of non-zero inputCDSM: ', len(vegdsm[vegdsm!=0])
-    print 'Psi value applied in this run: ', psi, '\n'
-
+        
+    ###########################
+    ### Balazs Dienes edit: ###
+    ###########################
     # At this stage there are two possibilities:
     # we either do use vegeration raster or do not.
     # If vegetation raster is not used, i.e the noplatwallmatrix variable was overwritten by SEBE, we are finished:
@@ -346,18 +359,18 @@ for line in metin:
         # At each voxel, the MINIMUM of irradiance is considered for each skypatch (NaN values are ignored)
         # Source: https://docs.scipy.org/doc/numpy/reference/generated/numpy.fmin.html#numpy.fmin
         minmatrix = np.fmin.reduce([plant1.wallmatrix, plant2.wallmatrix, plant3.wallmatrix, plant4.wallmatrix,
-                                plant5.wallmatrix, plant6.wallmatrix, plant7.wallmatrix, plant8.wallmatrix])
+                                plant5.wallmatrix, plant6.wallmatrix, plant7.wallmatrix, plant8.wallmatrix])   
+    ### end of editing ###
 
-    print 'minmatrix', len(minmatrix)
-    print 'minmatrix', len(minmatrix[0])
-    print 'minmatrix', len(minmatrix[0][1])
-
-    # After combining irradianc values per skypatches, they can be accumulated.
-    # Unlike the original code, in this case Energyyearwall is not copied per runs of a for loop (145*)
-        # Energyyearwall = Energyyearwall + np.copy(wallmatrix)
-
-    # but a list with 145 elements is summed up
+    ###########################
+    ### Balazs Dienes edit: ###
+    ###########################
+    # After combining irradiance values per skypatches, they can be accumulated.
+    # Unlike the original code (see line below), in this case Energyyearwall is not copied per runs of a for loop (145 times)...
+    # Original code: >>Energyyearwall = Energyyearwall + np.copy(wallmatrix)<<
+    # ... but a list with 145 elements is summed up
     Energyyearwall = minmatrix.sum(axis=0)
+    ### end of editing ###
 
     # Including radiation from ground on walls as well as removing pixels higher than walls
     print np.copy(Energyyearwall).shape
@@ -366,8 +379,11 @@ for line in metin:
     Energyyearwall /= 1000
     Energyyearwall = np.transpose(np.vstack((wallrow + 1, wallcol + 1, np.transpose(Energyyearwall))))    # adding 1 to wallrow and wallcol so that the tests pass
 
-    # Save the result
+    #######################################
+    ### Balazs Dienes edit: save result ###
+    #######################################
     filenamewall = outfolder + '/' + str(line[0]) + '-' + str(line[1]) + '-' + str(line[2]) + '.txt'
     header = '%row col irradiance'
     numformat = '%4d %4d ' + '%6.2f ' * (Energyyearwall.shape[1] - 2)
     np.savetxt(filenamewall, Energyyearwall, fmt=numformat, header=header, comments='')
+    ### end of editing ###
