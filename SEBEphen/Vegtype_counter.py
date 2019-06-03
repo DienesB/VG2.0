@@ -1,7 +1,7 @@
 # Author: Balazs Dienes
 # Contact: dienes.balazs88@gmail.com
 
-# This file separates an input vegtype raster to multiple vegtypes and runs SEBE separately for each of them.
+# This file separates an input vegtype raster to multiple vegtypes so that SEBE can separately run for each of them.
 
 # Import libraries:
 import sys
