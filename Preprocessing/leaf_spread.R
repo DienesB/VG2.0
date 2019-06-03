@@ -94,10 +94,10 @@ length(warm)
 GenusWeatherMerge <- merge(AllGenus, weatherSpring, by = "Referenzjahr", all.x = TRUE)
 
 #Test correlation 1:
-plot(GenusWeatherMerge$meanT,GenusWeatherMerge$Jultag, xlab = "Spring mean temperature (°C)", ylab = "DOY", main = "Correlation between DOY and temperature: - 0.41")
+plot(GenusWeatherMerge$meanT,GenusWeatherMerge$Jultag, xlab = "Spring mean temperature (Â°C)", ylab = "DOY", main = "Correlation between DOY and temperature: - 0.41")
 cor(GenusWeatherMerge$meanT,GenusWeatherMerge$Jultag) #-0.4110097
 abline(v = 9.53, col="red")
-text(10, 142, "k-means: 9.53°C", col = "red") 
+text(10, 142, "k-means: 9.53Â°C", col = "red") 
 
 #Test correlation 2:
 #On the previous plot, multiple Jultag values were presented for each year.
@@ -105,7 +105,7 @@ text(10, 142, "k-means: 9.53°C", col = "red")
 TemperatureJultagMean <- aggregate(GenusWeatherMerge$Jultag, list(GenusWeatherMerge$meanT), mean)
 TemperatureJultagMean
 #Jultag tends to decrease as the temperature increases
-plot(TemperatureJultagMean$Group.1,TemperatureJultagMean$x, main = "Correlation between mean DOY and temperature: - 0.73", xlab = "Spring mean temperature (°C)", ylab = "DOY")
+plot(TemperatureJultagMean$Group.1,TemperatureJultagMean$x, main = "Correlation between mean DOY and temperature: - 0.73", xlab = "Spring mean temperature (Â°C)", ylab = "DOY")
 abline(h=mean(GenusWeatherMerge$Jultag))
 abline(v = 9.53, col="red")
 text(10, 122, "k-means: 9.53", col = "red") 
