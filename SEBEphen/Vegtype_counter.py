@@ -23,9 +23,9 @@ def vegcounter():
     vegtypefilterArray = vegtypeArray[vegtypeArray > 0]
     print 'length of vegtype array without NoData values: ', len(vegtypefilterArray)
 
-    # The number of vegetation layers must equal to the number of UNIQUE values of vegetation types.
+    # The number of vegetation layers must be equal to the number of UNIQUE values of vegetation types.
     vegtypeuniqueArray = np.unique(vegtypefilterArray)
     print 'unique values in vegtype array: ', vegtypeuniqueArray
-    # At this point we have an array with unique vegetation type values.
-
+    
+    # As a result we got an array with unique vegetation type values.
     return vegtypeuniqueArray
