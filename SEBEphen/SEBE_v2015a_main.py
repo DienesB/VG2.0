@@ -21,16 +21,14 @@ import Veg_objects as vegobjects
 import inputCDSM_creator as cdsmcreator
 
 # Input settings
-mainfolder = "C:/Users/Balazs Dienes/PycharmProjects/SEBEphen/mainfolder/"
-metfilepath = mainfolder + 'input_met/Tegel2014_DOY115_CLEAR_SKY.txt'
-outfolder = mainfolder + 'output/'
-inputDSM = 'input_DSM/a1_dsm.tif'
-#inputCDSM = 'input_CDSM/veg_aoi2bb.tif'
-inputWallAspect = 'input_height_aspect/a1_dsm_aspect.tif'
-inputWallHeight = 'input_height_aspect/a1_dsm_height.tif'
+mainfolder = ".../"
+metfilepath = mainfolder + '... .txt'
+outfolder = mainfolder + '.../'
+inputDSM = '... .tif'
+inputWallAspect = '... .tif'
+inputWallHeight = '... .tif'
 usevegdem = 1
 onlyglobal = 1
-#psi = 0.03
 canopyToTrunkRatio = 0.3
 UTC = 1
 alt = 150.0
@@ -79,15 +77,6 @@ lat = lonlat[1]
 rows = dsm.shape[0]
 cols = dsm.shape[1]
 
-#if usevegdem == 1:
-#    dataSet = gdal.Open(mainfolder + inputCDSM)
-#    vegdsm = dataSet.ReadAsArray().astype(np.float)
-#    vegdsm2 = vegdsm * canopyToTrunkRatio
-#else:
-#    vegdsm = np.zeros([rows, cols])
-#    vegdsm2 = np.zeros([rows, cols])
-
-
 dataSet = gdal.Open(mainfolder + inputWallHeight)
 wallheight = dataSet.ReadAsArray().astype(np.float)
 dataSet = gdal.Open(mainfolder + inputWallAspect)
@@ -98,15 +87,8 @@ slope, aspect = get_ders(dsm, scale)
 # Processing of metdata
 metin = np.loadtxt(metfilepath, skiprows=1, delimiter=' ')
 
-# Quick fix if metdata is only one line
-# 09.07.2018 Balazs edit:
 for line in metin:
-    #TODO: this must be fixed! Check what the original model does.
-    #TODO: does not work with one-line-long input met data.
-    #if metin.shape.__len__() == 1:
     met = np.zeros((1, 24)) + line
-    #else:
-    #    met = metin
 
     location = {'longitude': lon, 'latitude': lat, 'altitude': alt}
     YYYY, altitude, azimuth, zen, jday, leafon, dectime, altmax = metload.Solweig_2015a_metdata_noload(met, location, UTC)
@@ -167,13 +149,6 @@ for line in metin:
             wallrow = plant2.wallmatrix[1]
             wallcol = plant2.wallmatrix[2]
             plant2.wallmatrix = plant2.wallmatrix[0]
-
-            #print 'returned wallmatrixlist for Betula', plant2.wallmatrix
-            #print 'wallrow', wallrow
-            #print 'wallcol', wallcol
-            print 'length of Betula wallmatrixlist', len(plant2.wallmatrix)
-            print 'length of Betula wallmatrixlist', len(plant2.wallmatrix[0])
-            print 'length of Betula wallmatrixlist', len(plant2.wallmatrix[0][0])
 
         # FRAXINUS:
         if np.any(uniquevegtype == 3):
@@ -301,7 +276,6 @@ for line in metin:
 
     # At this stage there are two possibilities:
     # we either do use vegeration raster or do not.
-
     # If vegetation raster is not used, i.e the noplatwallmatrix variable was overwritten by SEBE, we are finished:
     if noplantwallmatrix != 0:
         minmatrix = np.asarray(noplantwallmatrix)
@@ -309,41 +283,41 @@ for line in metin:
     else:
         # In case we use vegetation raster, a wallmatrix can be either overwritten by the return value from SEBE
         # (for trees that are in the AOI) or still remain as 0s (for trees not in the AOI)
-        # 0 wallmatrices will be replaced to NaN matrices so that they do not mess up the combination process later.
+        # 0 wallmatrices will be replaced to NaN matrices so that they do not take part in the combination process later.
 
         # Firstly, the length of non-zero wallmatrices is to be identified:
         if plant1.wallmatrix != 0:
             wallaxis1 = len(plant1.wallmatrix)  # 145
-            wallaxis2 = len(plant1.wallmatrix[0])  # 67
-            wallaxis3 = len(plant1.wallmatrix[0][0])  # 13
+            wallaxis2 = len(plant1.wallmatrix[0])
+            wallaxis3 = len(plant1.wallmatrix[0][0])
         elif plant2.wallmatrix != 0:
             wallaxis1 = len(plant2.wallmatrix)  # 145
-            wallaxis2 = len(plant2.wallmatrix[0])  # 67
-            wallaxis3 = len(plant2.wallmatrix[0][0])  # 13
+            wallaxis2 = len(plant2.wallmatrix[0])
+            wallaxis3 = len(plant2.wallmatrix[0][0])
         elif plant3.wallmatrix != 0:
             wallaxis1 = len(plant3.wallmatrix)  # 145
-            wallaxis2 = len(plant3.wallmatrix[0])  # 67
-            wallaxis3 = len(plant3.wallmatrix[0][0])  # 13
+            wallaxis2 = len(plant3.wallmatrix[0])
+            wallaxis3 = len(plant3.wallmatrix[0][0])
         elif plant4.wallmatrix != 0:
             wallaxis1 = len(plant4.wallmatrix)  # 145
-            wallaxis2 = len(plant4.wallmatrix[0])  # 67
-            wallaxis3 = len(plant4.wallmatrix[0][0])  # 13
+            wallaxis2 = len(plant4.wallmatrix[0])
+            wallaxis3 = len(plant4.wallmatrix[0][0])
         elif plant5.wallmatrix != 0:
             wallaxis1 = len(plant5.wallmatrix)  # 145
-            wallaxis2 = len(plant5.wallmatrix[0])  # 67
-            wallaxis3 = len(plant5.wallmatrix[0][0])  # 13
+            wallaxis2 = len(plant5.wallmatrix[0])
+            wallaxis3 = len(plant5.wallmatrix[0][0])
         elif plant6.wallmatrix != 0:
             wallaxis1 = len(plant6.wallmatrix)  # 145
-            wallaxis2 = len(plant6.wallmatrix[0])  # 67
-            wallaxis3 = len(plant6.wallmatrix[0][0])  # 13
+            wallaxis2 = len(plant6.wallmatrix[0])
+            wallaxis3 = len(plant6.wallmatrix[0][0])
         elif plant7.wallmatrix != 0:
             wallaxis1 = len(plant7.wallmatrix)  # 145
-            wallaxis2 = len(plant7.wallmatrix[0])  # 67
-            wallaxis3 = len(plant7.wallmatrix[0][0])  # 13
+            wallaxis2 = len(plant7.wallmatrix[0])
+            wallaxis3 = len(plant7.wallmatrix[0][0])
         elif plant8.wallmatrix != 0:
             wallaxis1 = len(plant8.wallmatrix)  # 145
-            wallaxis2 = len(plant8.wallmatrix[0])  # 67
-            wallaxis3 = len(plant8.wallmatrix[0][0])  # 13
+            wallaxis2 = len(plant8.wallmatrix[0])
+            wallaxis3 = len(plant8.wallmatrix[0][0])
 
         # Create a new matrix with the same size as non-zero wallmatrices and fill it up with NaNs:
         emptymatrix = np.empty([wallaxis1, wallaxis2, wallaxis3])
@@ -367,42 +341,6 @@ for line in metin:
         if plant8.wallmatrix == 0:
             plant8.wallmatrix = nanmatrix
 
-
-    #TODO: WITH SUMMING: INACCURACIES!
-        #print 'PLANT8'
-        #testplant8 = np.asarray(plant8.wallmatrix)
-
-        #testplant8 = testplant8.sum(axis=0)
-
-        #testplant8print = 0
-        #for testline in testplant8:
-        #    testplant8print = testplant8print + np.copy(testline)
-
-        #print testplant8print
-
-
-        #print 'COMBINED'
-        #testminmatrix = np.fmin.reduce([plant3.wallmatrix, plant8.wallmatrix])
-
-
-        #testminmatrix = testminmatrix.sum(axis=0)
-        #testplantcombprint = 0
-        #for testline in testminmatrix:
-        #    testplantcombprint = testplantcombprint + np.copy(testline)
-
-        #print testplantcombprint
-
-    #TODO: WITHOUT SUMMING: WORKS PERFECTLY FINE!
-
-        #print 'wallmatrix8'
-        #print plant8.wallmatrix
-        #print 'COMBINED'
-        #testminmatrix = np.fmin.reduce([plant3.wallmatrix[100], plant8.wallmatrix[100]])
-        #print testminmatrix
-        #testminmatrix = np.transpose(np.vstack((wallrow + 1, wallcol + 1, np.transpose(testminmatrix))))
-        #print testminmatrix
-
-
         # At this stage we still have a list of matrices with 145 elements
         # First the matrix list of different species is to be combined (to "minmatrix")
         # At each voxel, the MINIMUM of irradiance is considered for each skypatch (NaN values are ignored)
@@ -417,8 +355,8 @@ for line in metin:
     # After combining irradianc values per skypatches, they can be accumulated.
     # Unlike the original code, in this case Energyyearwall is not copied per runs of a for loop (145*)
         # Energyyearwall = Energyyearwall + np.copy(wallmatrix)
+
     # but a list with 145 elements is summed up
-    #TODO: numpy.sum is not accurate!!!
     Energyyearwall = minmatrix.sum(axis=0)
 
     # Including radiation from ground on walls as well as removing pixels higher than walls
@@ -429,7 +367,6 @@ for line in metin:
     Energyyearwall = np.transpose(np.vstack((wallrow + 1, wallcol + 1, np.transpose(Energyyearwall))))    # adding 1 to wallrow and wallcol so that the tests pass
 
     # Save the result
-    # 09.07.2018 Balazs edit: dynamic Energyyearwall.txt naming
     filenamewall = outfolder + '/' + str(line[0]) + '-' + str(line[1]) + '-' + str(line[2]) + '.txt'
     header = '%row col irradiance'
     numformat = '%4d %4d ' + '%6.2f ' * (Energyyearwall.shape[1] - 2)
