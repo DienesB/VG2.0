@@ -63,6 +63,7 @@ def SEBE_2015a_calc(a, scale, slope, aspect, voxelheight, sizey, sizex, vegdem, 
     #################################################################
     wallmatrixlist = []
     index = 0
+    ### end of editing ###
 
     for i in range(skyvaultaltint.size):
         for j in range(aziinterval[i]):
@@ -143,4 +144,5 @@ def SEBE_2015a_calc(a, scale, slope, aspect, voxelheight, sizey, sizex, vegdem, 
             wallmatrixlist.append(wallmatrix)
             index = index + 1
     return wallmatrixlist, wallrow, wallcol
+            ### end of editing ###
 
